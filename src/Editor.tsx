@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import AceEditor from 'react-ace';
-import 'brace/theme/monokai';
-import 'brace/mode/javascript';
+// import AceEditor from 'react-ace';
+// import 'brace/theme/monokai';
+// import 'brace/mode/javascript';
 import { StyledButton } from './Button';
 import styled from 'styled-components';
+import MonacoEditor from 'react-monaco-editor';
 
 interface EditorProps {
   code: string;
@@ -28,9 +29,25 @@ export class Editor extends Component<EditorProps> {
     const { code } = this.state;
     const { onChange, height = '100%', changeText = 'Update' } = this.props;
 
+    function editorDidMount(editor: any, monaco: any) {
+      console.log('editorDidMount', editor, monaco)
+      editor.focus();
+    }
+
     return (
       <StyledEditor>
-        <AceEditor
+        <MonacoEditor
+            language="javascript"
+            width="100%"
+            height={height as string}
+            theme="vs-dark"
+            value={code}
+            // options={options}
+            onChange={value => this.setState({ code: value })}
+            editorDidMount={editorDidMount}
+          />
+        );
+        {/* <AceEditor
           mode="javascript"
           theme="monokai"
           editorProps={{ $blockScrolling: true }}
@@ -41,7 +58,7 @@ export class Editor extends Component<EditorProps> {
           height={height as string}
           showGutter={false}
           readOnly={!onChange}
-        />
+        /> */}
         {onChange ? (
           <StyledButton onClick={() => onChange(this.state.code)}>
             {changeText}
